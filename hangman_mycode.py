@@ -1,8 +1,9 @@
 import random
 
 # #creating a list of words for hangman
-word_list = ['book', 'cat', 'dog', 'apple', 'banana', 'class', 'python', 'java', 'rock', 'scissors', 'paper', 'run', 'walk', 'talk', 'try', 'evening', 'morning']
+#word_list = ['book', 'cat', 'dog', 'apple', 'banana', 'class', 'python', 'java', 'rock', 'scissors', 'paper', 'run', 'walk', 'talk', 'try', 'evening', 'morning']
 
+word_list = ['python', 'rhyme']
 # #Word chosen by the program out of the word_list, using 'random' function - **Code works from the main() function**
 def pick_random_word(given_list):
 	random_word = given_list[random.randrange(len(given_list))]
@@ -15,14 +16,14 @@ def pick_random_word(given_list):
 
 # ********************+****
 # #Function to ask the User for input - **code Works from the main() function **
-# Validate the user input
+# Validates the user input
 # # *************************
 def get_user_input(string_of_my_guess):
 	while True:
-				user_guess = raw_input("Guess the letter: ")
+				user_guess = raw_input("\nGuess the letter: ")
 				user_guess = user_guess.lower()
 				if user_guess not in 'abcdefghijklmnopqrstuvwxyz':
-					print "Enter a valid letter: "
+					print "I don't understand!! Please enter a valid letter: "
 				elif len(user_guess)!= 1:
 					print "Please enter a single letter: "
 				elif user_guess in string_of_my_guess:
@@ -31,13 +32,22 @@ def get_user_input(string_of_my_guess):
 					return user_guess
 
 
+#Function to ask user to continue game
+def continue_game(continue_string):
+	while True:
+		if continue_string.lower() == "yes":
+			break
+		elif continue_string.lower() == "no":
+			print "\nEnjoy!! See you later!! :)"
+			quit()		
+
 
 # #Function to validate if the User input is present in the secret word, 
 #if yes - add it to a string of correct letters, else append it to string of incorrect_letters
 def check_user_input(guessed_word):
 	length_of_guessed_word = len(guessed_word)
 	string_of_my_correct_guess = ["_" for i in range(length_of_guessed_word)]
-	print "Length of copy of guessed_word is ",string_of_my_correct_guess
+	print "\nLength of copy of guessed_word is ",string_of_my_correct_guess
 
 
 	max_number_of_guesses = 8
@@ -46,14 +56,14 @@ def check_user_input(guessed_word):
 	print "**************************************************************************** \n"
 	incorrect_letters = []
 	list_of_my_guesses = []
-	for i in range(8):
+	while len(incorrect_letters) < 5:
 		user_guessed_letter = get_user_input(list_of_my_guesses)
 		list_of_my_guesses.append(user_guessed_letter)
-		print "the user input in iteration %ith iteration is %s" %(i, user_guessed_letter)
+		#print "\nthe user input in iteration %ith iteration is %s" %(i, user_guessed_letter)
 
 		if user_guessed_letter in guessed_word:
 			index_of_correct_letter = guessed_word.index(user_guessed_letter)
-			print "The position of the letter is", index_of_correct_letter
+			print "\nThe position of the letter is", index_of_correct_letter
 			string_of_my_correct_guess[index_of_correct_letter] = user_guessed_letter
 			print string_of_my_correct_guess
 			# if "".join(string_of_my_guess) == guessed_word:
@@ -65,22 +75,41 @@ def check_user_input(guessed_word):
 			print incorrect_letters
 
 		if "".join(string_of_my_correct_guess) == guessed_word:
-			print "Yayyy! you've won"
+			continue_string = raw_input ("\nyayyy! you've won!!\n\nDo you want to continue? Enter yes or no: ")
+			continue_game(continue_string)
+			break
+			# if continue_string.lower() == "yes":
+			# 	break
+			# elif continue_string.lower() == "no":
+			# 	print "\nEnjoy! See you later!!:)\n"
+			# 	quit()
+			
+		elif len(incorrect_letters) == 5:
+			continue_string = raw_input ("\nSorry! you have made 5 incorrect guesses - game over!\n\nDo you want to continue? Enter yes or no: ")
+			continue_game(continue_string)
+			# if continue_string.lower() == "yes":
+			# 	break
+			# elif continue_string.lower() == "no":
+			# 	print "\nEnjoy! See you later!!:)\n"
+			# 	quit()
 
 
-	print "Sorry, no more guesses, you have reached the limit"
+#To do: call function here asking user to continue or quit
+
+	
 
 
 
 def main():
 	# @TODO: pick a word and store it
-	guessed_word = pick_random_word(word_list)
-	print "Random word is: ", guessed_word
+	while True:
+		guessed_word = pick_random_word(word_list)
+		print "Random word is: ", guessed_word
 
-	length_of_guessed_word = len(guessed_word)
-	print "length of secret word is: ",length_of_guessed_word
+		length_of_guessed_word = len(guessed_word)
+		print "length of secret word is: ",length_of_guessed_word
 
-	check_user_input(guessed_word)
+		check_user_input(guessed_word)
 
 
 	# print "Sorry, no more guesses, you have reached the limit"
